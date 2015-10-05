@@ -14,11 +14,11 @@ class Assertion():
         AssertionType(unittest='self.assertFalse(', pytest='assert not '),
         AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance'),
         AssertionType(unittest='self.assertIsNone', append=' is None'),
-        AssertionType(unittest='self.assertIsNotNone', append=' is not None')
+        AssertionType(unittest='self.assertIsNotNone', append=' is not None'),
+        AssertionType(unittest='self.assertRaises(', pytest='pytest.raises(', keep_ending=True)
     ]
 
-    def __init__(self, line_nr, lines):
-        self.line_nr = line_nr
+    def __init__(self, lines):
         self.lines = lines
         self.refactor()
 
@@ -27,7 +27,8 @@ class Assertion():
         for assertion_type in self.assertion_types:
             if assertion_type.unittest in self.lines[0]:
                 self.lines[0] = self.lines[0].replace(assertion_type.unittest, assertion_type.pytest)
-                self.lines[-1] = self.lines[-1][:-1] + assertion_type.append
+                if not assertion_type.keep_ending:
+                    self.lines[-1] = self.lines[-1][:-1] + assertion_type.append
                 if assertion_type.comma_replace is not None:
                     comma_index = self.comma_finder()
                     self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
