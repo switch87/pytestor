@@ -3,7 +3,7 @@ import re
 from refactor.test_files import TestFile
 
 test_files = []
-rootdir = '/home/switch87/workspace/mvne-platform/'
+rootdir = 'c:\\Users\\gert\\Documents\\workplace\\mvne-platform'
 
 for dir_name, subdir_list, file_list in os.walk(rootdir):
     for file in file_list:

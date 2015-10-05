@@ -1,4 +1,22 @@
+from refactor.assertyon_type import AssertionType
+
+
 class Assertion():
+
+    assertion_types = [
+        AssertionType(unittest='self.assertEqual(', comma_replace=' =='),
+        AssertionType(unittest='self.assertEquals(', comma_replace=' =='),
+        AssertionType(unittest='self.assertListEqual(', comma_replace=' =='),
+        AssertionType(unittest='self.assertNotEqual(', comma_replace=' !='),
+        AssertionType(unittest='self.assertIn(', comma_replace=' in'),
+        AssertionType(unittest='self.assertNotIn(', comma_replace=' not in'),
+        AssertionType(unittest='self.assertTrue('),
+        AssertionType(unittest='self.assertFalse(', pytest='assert not '),
+        AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance'),
+        AssertionType(unittest='self.assertIsNone', append=' is None'),
+        AssertionType(unittest='self.assertIsNotNone', append=' is not None')
+    ]
+
     def __init__(self, line_nr, lines):
         self.line_nr = line_nr
         self.lines = lines
@@ -6,53 +24,13 @@ class Assertion():
 
     def refactor(self):
         #assertTrue
-        if 'self.assertTrue(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertTrue(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-        elif 'self.assertFalse(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertFalse(', 'assert not ')
-            self.lines[-1] = self.lines[-1][:-1]
-        elif 'self.assertIsInstance(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertIsInstance(', 'assert isinstance(')
-        elif 'self.assertIsNone(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertIsNone(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]+' is None'
-        elif 'self.assertIsNotNone(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertIsNotNone(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]+' is not None'
-
-        # todo: will not work for multi-line
-        if 'self.assertIn(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertIn(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-            comma_index = self.comma_finder()
-            self.lines[0] = self.lines[0][0:comma_index-1]+' in'+self.lines[0][comma_index+1:]
-
-        # todo: will not work for multi-line
-        if 'self.assertEqual(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertEqual(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-            comma_index = self.comma_finder()
-            self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
-        # todo: will not work for multi-line
-        if 'self.assertEquals(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertEquals(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-            comma_index = self.comma_finder()
-            self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
-        # todo: will not work for multi-line
-        if 'self.assertListEquals(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertListEquals(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-            comma_index = self.comma_finder()
-            self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
-
-        # todo: will not work for multi-line
-        if 'self.assertNotEqual(' in self.lines[0]:
-            self.lines[0] = self.lines[0].replace('self.assertNotEqual(', 'assert ')
-            self.lines[-1] = self.lines[-1][:-1]
-            comma_index = self.comma_finder()
-            self.lines[0] = self.lines[0][0:comma_index]+' !='+self.lines[0][comma_index+1:]
+        for assertion_type in self.assertion_types:
+            if assertion_type.unittest in self.lines[0]:
+                self.lines[0] = self.lines[0].replace(assertion_type.unittest, assertion_type.pytest)
+                self.lines[-1] = self.lines[-1][:-1] + assertion_type.append
+                if assertion_type.comma_replace is not None:
+                    comma_index = self.comma_finder()
+                    self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
 
     def comma_finder(self):
 
