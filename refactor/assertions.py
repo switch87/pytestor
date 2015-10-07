@@ -22,18 +22,24 @@ class Assertion():
         self.line = line
         self.linecount = 1
         self.complete = False
+        self.assertion_type = self.set_assertion_type()
 
     def refactor(self):
-        #assertTrue
+
+        self.line = self.line.replace(self.assertion_type.unittest, self.assertion_type.pytest)
+        if not self.assertion_type.keep_ending:
+            self.line = self.line[:-1] + self.assertion_type.append
+        if self.assertion_type.comma_replace is not None:
+            comma_index = self.comma_finder()
+            self.line = self.line[0:comma_index]+' =='+self.line[comma_index+1:]
+        self.complete = True
+
+    def set_assertion_type(self):
+
         for assertion_type in self.assertion_types:
             if assertion_type.unittest in self.line:
-                self.line = self.line.replace(assertion_type.unittest, assertion_type.pytest)
-                if not assertion_type.keep_ending:
-                    self.line = self.line[:-1] + assertion_type.append
-                if assertion_type.comma_replace is not None:
-                    comma_index = self.comma_finder()
-                    self.line = self.line[0:comma_index]+' =='+self.line[comma_index+1:]
-        self.complete = True
+                return assertion_type
+        return self.assertion_types[0]
 
     def comma_finder(self):
 

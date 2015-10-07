@@ -1,3 +1,4 @@
+import re
 from refactor.assertions import Assertion
 
 
@@ -24,7 +25,19 @@ class Line:
                 if prevline.assertion is not None:
                     if not prevline.assertion.complete:
                         self.assertion = prevline.assertion
-                        self.assertion.line = self.assertion.line[:-1] + '\\\n' + self.line
+
+                        backslash = True
+                        brackets = re.findall(r'[()]', self.assertion.line)
+                        if brackets is not None:
+                            if (brackets[-1] == '(' and len(brackets) >= 2) \
+                                    or self.assertion.assertion_type.pytest[-1] == '(':
+                                backslash = False
+                            else:
+                                backslash = True
+                        if backslash:
+                            self.assertion.line = self.assertion.line[:-1] + '\\\n' + self.line
+                        else:
+                            self.assertion.line = self.assertion.line + self.line
                         self.line = None
                         self.assertion.linecount += 1
                         if self.bracket_compare():
