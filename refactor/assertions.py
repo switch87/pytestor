@@ -5,6 +5,10 @@ class Assertion():
 
     assertion_types = [
         AssertionType(unittest='self.assertEqual(', comma_replace=' =='),
+        AssertionType(unittest='self.assertGreater(', comma_replace=' >'),
+        AssertionType(unittest='self.assertGreaterEqual(', comma_replace=' >='),
+        AssertionType(unittest='self.assertLess(', comma_replace=' <'),
+        AssertionType(unittest='self.assertLessEqual(', comma_replace=' <='),
         AssertionType(unittest='self.assertEquals(', comma_replace=' =='),
         AssertionType(unittest='self.assertListEqual(', comma_replace=' =='),
         AssertionType(unittest='self.assertNotEqual(', comma_replace=' !='),
@@ -15,7 +19,10 @@ class Assertion():
         AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance', keep_ending=True),
         AssertionType(unittest='self.assertIsNone', append=' is None'),
         AssertionType(unittest='self.assertIsNotNone', append=' is not None'),
-        AssertionType(unittest='self.assertRaises(', pytest='pytest.raises(', keep_ending=True)
+        AssertionType(unittest='self.assertRaises(', pytest='pytest.raises(', keep_ending=True),
+
+        AssertionType(unittest='self.assertCreates(', pytest='self.assertCreates(', keep_ending=True),
+        AssertionType(unittest='self.assertCount(', pytest='self.assertCount(', keep_ending=True)
     ]
 
     def __init__(self, line):
@@ -39,7 +46,7 @@ class Assertion():
         for assertion_type in self.assertion_types:
             if assertion_type.unittest in self.line:
                 return assertion_type
-        return self.assertion_types[0]
+        return None
 
     def comma_finder(self):
 

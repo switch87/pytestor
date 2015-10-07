@@ -1,6 +1,3 @@
-import fileinput
-import re
-from refactor.assertions import Assertion
 from refactor.lines import Line
 
 __author__ = 'switch87'

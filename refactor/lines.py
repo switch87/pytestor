@@ -15,6 +15,9 @@ class Line:
         if 'self.assert' in self.line:
             # if 1-line assertion
             self.assertion = Assertion(self.line)
+            if self.assertion.assertion_type == None:
+                self.assertion = None
+                return
 
             # todo: if multi-line assertion
             if self.bracket_compare():
