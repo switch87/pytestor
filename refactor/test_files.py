@@ -13,7 +13,7 @@ class TestFile():
         self.lines = []
         f = open(self.get_full_name(),'r')
         for line in f:
-            self.lines.append(Line(self, line[:-1]))
+            self.lines.append(Line(self, line))
 
     def get_full_name(self):
         return '{0}/{1}'.format(self.dir_name,self.file_name)
@@ -22,6 +22,6 @@ class TestFile():
         with open(self.get_full_name(),'w') as file:
             for line in self.lines:
                 if line.assertion is not None:
-                    file.write(line.assertion.lines[0]+'\n')
-                else:
-                    file.write(line.line+'\n')
+                    file.write(line.assertion.line[:-1]+'\n')
+                elif line.line:
+                    file.write(line.line[:-1]+'\n')

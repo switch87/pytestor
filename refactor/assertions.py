@@ -12,30 +12,32 @@ class Assertion():
         AssertionType(unittest='self.assertNotIn(', comma_replace=' not in'),
         AssertionType(unittest='self.assertTrue('),
         AssertionType(unittest='self.assertFalse(', pytest='assert not '),
-        AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance'),
+        AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance', keep_ending=True),
         AssertionType(unittest='self.assertIsNone', append=' is None'),
         AssertionType(unittest='self.assertIsNotNone', append=' is not None'),
         AssertionType(unittest='self.assertRaises(', pytest='pytest.raises(', keep_ending=True)
     ]
 
-    def __init__(self, lines):
-        self.lines = lines
-        self.refactor()
+    def __init__(self, line):
+        self.line = line
+        self.linecount = 1
+        self.complete = False
 
     def refactor(self):
         #assertTrue
         for assertion_type in self.assertion_types:
-            if assertion_type.unittest in self.lines[0]:
-                self.lines[0] = self.lines[0].replace(assertion_type.unittest, assertion_type.pytest)
+            if assertion_type.unittest in self.line:
+                self.line = self.line.replace(assertion_type.unittest, assertion_type.pytest)
                 if not assertion_type.keep_ending:
-                    self.lines[-1] = self.lines[-1][:-1] + assertion_type.append
+                    self.line = self.line[:-1] + assertion_type.append
                 if assertion_type.comma_replace is not None:
                     comma_index = self.comma_finder()
-                    self.lines[0] = self.lines[0][0:comma_index]+' =='+self.lines[0][comma_index+1:]
+                    self.line = self.line[0:comma_index]+' =='+self.line[comma_index+1:]
+        self.complete = True
 
     def comma_finder(self):
 
-        comma_index = self.lines[0].find(',', 7)
+        comma_index = self.line.find(',', 7)
         found = False
         counter = 0
         while not found and counter < 15:
@@ -44,7 +46,7 @@ class Assertion():
             count_close = 0
             count_single = 0
             count_double = 0
-            for letter in self.lines[0][7: comma_index]:
+            for letter in self.line[7: comma_index]:
                 if letter == '(':
                     count_open += 1
                 elif letter == ')':
@@ -58,5 +60,5 @@ class Assertion():
                                     count_double%2 == 0:
                 found = True
             else:
-                comma_index = self.lines[0].find(',',comma_index+1)
+                comma_index = self.line.find(',',comma_index+1)
         return comma_index

@@ -12,18 +12,33 @@ class Line:
 
     def set_assertions(self, type=None):
         if 'self.assert' in self.line:
-            count_open = 0
-            count_close = 0
-            for letter in self.line:
-                if letter == '(':
-                    count_open += 1
-                elif letter == ')':
-                    count_close += 1
-
-                # if 1-line assertion
-            if count_open == count_close:
-                self.assertion = Assertion([self.line])
+            # if 1-line assertion
+            self.assertion = Assertion(self.line)
 
             # todo: if multi-line assertion
-            else:
-                pass
+            if self.bracket_compare():
+                self.assertion.refactor()
+        else:
+            if self.line_nr != 0:
+                prevline = self.file.lines[self.line_nr-1]
+                if prevline.assertion is not None:
+                    if not prevline.assertion.complete:
+                        self.assertion = prevline.assertion
+                        self.assertion.line = self.assertion.line[:-1] + '\\\n' + self.line
+                        self.line = None
+                        self.assertion.linecount += 1
+                        if self.bracket_compare():
+                            self.assertion.refactor()
+
+    def bracket_compare(self):
+        count_open = 0
+        count_close = 0
+        for letter in self.assertion.line:
+            if letter == '(':
+                count_open += 1
+            elif letter == ')':
+                count_close += 1
+        if count_close == count_open:
+            return True
+        else:
+            return False

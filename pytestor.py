@@ -17,12 +17,12 @@ for file in test_files:
     print('-'*len(file.get_full_name()))
     for line in file.lines:
         if line.assertion is not None:
-            print(colored(str(line.line_nr)+' - '+line.assertion.lines[0], 'green'))
+            print(colored(str(line.line_nr)+' - '+line.assertion.line[:-1], 'green'))
         else:
             if 'self.assert' in line.line:
-                print(colored(str(line.line_nr)+' - '+str(line.line),'red'))
+                print(colored(str(line.line_nr)+' - '+str(line.line[:-1]),'red'))
             else:
-                print(str(line.line_nr)+' - '+str(line.line))
+                print(str(line.line_nr)+' - '+str(line.line[:-1]))
     print()
 
     file.replace_file()
