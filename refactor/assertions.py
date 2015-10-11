@@ -1,49 +1,34 @@
-from refactor.assertyon_type import AssertionType
+import re
+from refactor.assertyon_type import AssertionType, assertion_types
 
 
 class Assertion():
-
-    assertion_types = [
-        AssertionType(unittest='self.assertEqual(', comma_replace=' =='),
-        AssertionType(unittest='self.assertGreater(', comma_replace=' >'),
-        AssertionType(unittest='self.assertGreaterEqual(', comma_replace=' >='),
-        AssertionType(unittest='self.assertLess(', comma_replace=' <'),
-        AssertionType(unittest='self.assertLessEqual(', comma_replace=' <='),
-        AssertionType(unittest='self.assertEquals(', comma_replace=' =='),
-        AssertionType(unittest='self.assertListEqual(', comma_replace=' =='),
-        AssertionType(unittest='self.assertNotEqual(', comma_replace=' !='),
-        AssertionType(unittest='self.assertIn(', comma_replace=' in'),
-        AssertionType(unittest='self.assertNotIn(', comma_replace=' not in'),
-        AssertionType(unittest='self.assertTrue('),
-        AssertionType(unittest='self.assertFalse(', pytest='assert not '),
-        AssertionType(unittest='self.assertIsInstance', pytest='assert isinstance', keep_ending=True),
-        AssertionType(unittest='self.assertIsNone', append=' is None'),
-        AssertionType(unittest='self.assertIsNotNone', append=' is not None'),
-        AssertionType(unittest='self.assertRaises(', pytest='pytest.raises(', keep_ending=True),
-
-        AssertionType(unittest='self.assertCreates(', pytest='self.assertCreates(', keep_ending=True),
-        AssertionType(unittest='self.assertCount(', pytest='self.assertCount(', keep_ending=True)
-    ]
-
     def __init__(self, line):
-        self.line = line
+        self.line_object = line
+        self.line = line.line
+        self.line_nr = line.line_nr
         self.linecount = 1
         self.complete = False
         self.assertion_type = self.set_assertion_type()
+
+    def getline(self, line_nr):
+        return re.split(r'\n', self.line)[line_nr]
 
     def refactor(self):
 
         self.line = self.line.replace(self.assertion_type.unittest, self.assertion_type.pytest)
         if not self.assertion_type.keep_ending:
-            self.line = self.line[:-1] + self.assertion_type.append
+            self.line = self.line[:-2] + self.assertion_type.append
         if self.assertion_type.comma_replace is not None:
             comma_index = self.comma_finder()
             self.line = self.line[0:comma_index]+' =='+self.line[comma_index+1:]
         self.complete = True
+        if self.assertion_type.import_pytest:
+            self.line_object.file.import_pytest = True
 
     def set_assertion_type(self):
 
-        for assertion_type in self.assertion_types:
+        for assertion_type in assertion_types:
             if assertion_type.unittest in self.line:
                 return assertion_type
         return None

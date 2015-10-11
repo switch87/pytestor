@@ -9,6 +9,7 @@ class TestFile():
         self.dir_name = dir_name
         self.lines = []
         f = open(self.get_full_name(),'r')
+        self.import_pytest = False
         for line in f:
             self.lines.append(Line(self, line))
 
@@ -19,6 +20,6 @@ class TestFile():
         with open(self.get_full_name(),'w') as file:
             for line in self.lines:
                 if line.assertion is not None:
-                    file.write(line.assertion.line[:-1]+'\n')
+                    file.write(line.get_refactor()+'\n')
                 elif line.line:
                     file.write(line.line[:-1]+'\n')

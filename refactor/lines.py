@@ -14,12 +14,11 @@ class Line:
     def set_assertions(self, type=None):
         if 'self.assert' in self.line:
             # if 1-line assertion
-            self.assertion = Assertion(self.line)
+            self.assertion = Assertion(self)
             if self.assertion.assertion_type == None:
                 self.assertion = None
                 return
 
-            # todo: if multi-line assertion
             if self.bracket_compare():
                 self.assertion.refactor()
         else:
@@ -41,7 +40,6 @@ class Line:
                             self.assertion.line = self.assertion.line[:-1] + '\\\n' + self.line
                         else:
                             self.assertion.line = self.assertion.line + self.line
-                        self.line = None
                         self.assertion.linecount += 1
                         if self.bracket_compare():
                             self.assertion.refactor()
@@ -58,3 +56,11 @@ class Line:
             return True
         else:
             return False
+
+    def get_refactor(self):
+        if self.assertion:
+            return self.assertion.getline(self.line_nr-self.assertion.line_nr)
+        return self.get_original()
+
+    def get_original(self):
+        return self.line
