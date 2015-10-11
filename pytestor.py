@@ -21,6 +21,8 @@ def process_directory(dir):
 
     if re.match(r'^./.*', dir):
         dir = dir[2:]
+    elif re.match(r'~/.*', dir):
+        dir = os.getenv("HOME") + '/' + dir
     if not re.match(r'/.*', dir):
         dir = '/'.join(d for d in cwd) + '/' + dir
     return dir
