@@ -1,25 +1,28 @@
+# Copyright (C) 2015  Gert Pellin
 from refactor.lines import Line
 
-__author__ = 'switch87'
 
-class TestFile():
-
+class TestFile(object):
     def __init__(self, file_name, dir_name):
         self.file_name = file_name
         self.dir_name = dir_name
         self.lines = []
-        f = open(self.get_full_name(),'r')
+        f = open(self.get_full_name(), 'r')
         self.import_pytest = False
         for line in f:
             self.lines.append(Line(self, line))
 
     def get_full_name(self):
-        return '{0}/{1}'.format(self.dir_name,self.file_name)
+        return '{0}/{1}'.format(self.dir_name, self.file_name)
 
     def replace_file(self):
-        with open(self.get_full_name(),'w') as file:
+        """
+        replace the original test-file with the pytest test-file
+        :return:
+        """
+        with open(self.get_full_name(), 'w') as file:
             for line in self.lines:
                 if line.assertion is not None:
-                    file.write(line.get_refactor()+'\n')
+                    file.write(line.get_refactor() + '\n')
                 elif line.line:
-                    file.write(line.line[:-1]+'\n')
+                    file.write(line.line[:-1] + '\n')

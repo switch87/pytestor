@@ -1,10 +1,11 @@
-class AssertionType():
+# Copyright (C) 2015  Gert Pellin
+class AssertionType:
     def __init__(self, unittest, pytest='assert ', comma_replace=None, append='', keep_ending=False, import_pytest=False):
         self.unittest = unittest
         self.pytest = pytest
         self.comma_replace = comma_replace
         self.append = append
-        self.keep_ending=keep_ending
+        self.keep_ending = keep_ending
         self.import_pytest = import_pytest
 
 assertion_types = [
