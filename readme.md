@@ -18,5 +18,4 @@ replaced, so keep a backup at hand.
 The application will output all test-files followed bu all found assertions:
  * green: refactored (but at the moment not guaranteed to be 100% working)
  * red: not recognised by the application, please let me know or do a pull request.
-Underneath it will output a list of files where `import pytest` should be added manually. 
  
