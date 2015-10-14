@@ -1,8 +1,8 @@
 # Copyright (C) 2015  Gert Pellin
 import re
 
-from refactor.assertyon_type import assertion_types
-from refactor.shared import bracket_compare
+from assertyon_type import assertion_types
+from shared import bracket_compare
 
 
 class Assertion(object):

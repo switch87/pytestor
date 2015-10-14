@@ -2,7 +2,7 @@
 import argparse
 import os
 import re
-from refactor.test_files import TestFile
+from test_files import TestFile
 
 
 def process_directory(directory):

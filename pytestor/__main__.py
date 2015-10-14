@@ -16,8 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from termcolor import colored
+from directory import command_parser, process_directory, iterate_files
 
-from refactor.directory import process_directory, iterate_files, command_parser
 
 args = command_parser()
 root_dir = process_directory(args.directory)

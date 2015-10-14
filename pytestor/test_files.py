@@ -1,5 +1,5 @@
 # Copyright (C) 2015  Gert Pellin
-from refactor.lines import Line
+from lines import Line
 
 
 class TestFile(object):

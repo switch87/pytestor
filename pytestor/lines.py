@@ -1,7 +1,7 @@
 # Copyright (C) 2015  Gert Pellin
 import re
-from refactor.assertions import Assertion
-from refactor.shared import bracket_compare
+from assertions import Assertion
+from shared import bracket_compare
 
 
 class Line(object):
