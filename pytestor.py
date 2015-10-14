@@ -27,17 +27,14 @@ imports = []
 
 for file in test_files:
     print(file.get_full_name())
-    print('-'*len(file.get_full_name()))
+    print('-' * len(file.get_full_name()))
     for line in file.lines:
         if line.assertion is not None:
-            print(colored(str(line.line_nr)+' - '+line.get_refactor(), 'green'))
+            print(colored(str(line.line_nr) + ' - ' + line.get_refactor(), 'green'))
         else:
             if 'self.assert' in line.line:
-                print(colored(str(line.line_nr)+' - '+line.get_refactor(),'red'))
+                print(colored(str(line.line_nr) + ' - ' + line.get_refactor(), 'red'))
     print()
     if file.import_pytest:
         imports.append(file)
     file.replace_file()
-
-for file in imports:
-    print(file.get_full_name())

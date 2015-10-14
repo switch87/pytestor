@@ -21,6 +21,9 @@ class TestFile(object):
         """
         with open(self.get_full_name(), 'w') as file:
             for line in self.lines:
+                if self.import_pytest and line.line[1] != '#':
+                    file.write('import pytest\n')
+                    self.import_pytest = False
                 if line.assertion is not None:
                     file.write(line.get_refactor() + '\n')
                 elif line.line:
