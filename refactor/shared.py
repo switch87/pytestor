@@ -5,7 +5,8 @@ import re
 def bracket_compare(string):
     """
     compare if there are the same amount of opening and closing brackets in the line of code
-    :return:
+    :param: string to search in (str)
+    :return: opening brackets == closing brackets (bool)
     """
     count_open, count_close = find_brackets_inside_quotes(string)
     count_open = - count_open + len(re.findall(r'\(|\[|\{', string))
@@ -19,8 +20,8 @@ def bracket_compare(string):
 def find_brackets_inside_quotes(string):
     """
     count brackets inside quoted strings
-    :param string:
-    :return:
+    :param string to search in (str)
+    :return: opening and closing bracket count (int, int)
     """
     quotes = re.match(r'^.*(\".*\"|\'.*\')', string)
     if quotes is not None:

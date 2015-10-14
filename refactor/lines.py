@@ -15,7 +15,6 @@ class Line(object):
     def set_assertions(self):
         """
         set the pytest assertion for the line, returns None if no assertion is present
-        :return:
         """
         if 'self.assert' in self.line:
             self.assertion = Assertion(self)
@@ -50,8 +49,8 @@ class Line(object):
 
     def get_refactor(self):
         """
-        return the assertion in pytest formatting
-        :return:
+        return the line in pytest formatting if available, else it returns the original line
+        :return: line (str)
         """
         if self.assertion:
             return self.assertion.get_line(self.line_nr - self.assertion.line_nr)

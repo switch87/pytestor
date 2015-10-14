@@ -18,7 +18,6 @@ class TestFile(object):
     def replace_file(self):
         """
         replace the original test-file with the pytest test-file
-        :return:
         """
         with open(self.get_full_name(), 'w') as file:
             for line in self.lines:

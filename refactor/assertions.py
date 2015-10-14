@@ -17,15 +17,14 @@ class Assertion(object):
     def get_line(self, line_nr):
         """
         returns 1 line of the assertion in pytest formatting.
-        :param line_nr:
-        :return:
+        :param line_nr (int): The line number of the assertion to return
+        :return: 1 line of the assertion (str)
         """
         return re.split(r'\n', self.line)[line_nr]
 
     def refactor(self):
         """
         refactor the assertion to pytest formatting, should only be ran after all lines of the assertion are present
-        :return:
         """
         if not self.assertion_type.keep_ending:
             self.line = self.line[:-2] + self.assertion_type.append
@@ -41,7 +40,7 @@ class Assertion(object):
         """
         set the assertion type based on the formatting of the first line of the original assertion, assertion types
         are defined inside assertion_types
-        :return:
+        :return: assertion type (AssertionType)
         """
         for assertion_type in assertion_types:
             if assertion_type.unittest in self.line:
@@ -51,7 +50,7 @@ class Assertion(object):
     def comma_finder(self):
         """
         if necessary, find the comma relevant to the working of the assertion
-        :return:
+        :return: index if the comma (int)
         """
         comma_index = self.line.find(',', 7)
         found = False
